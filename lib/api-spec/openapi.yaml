@@ -1,22 +1,43 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: EternaPy API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: users
+    description: User profile and onboarding
+  - name: courses
+    description: Courses and learning paths
+  - name: lessons
+    description: Lessons
+  - name: challenges
+    description: Coding challenges
+  - name: assignments
+    description: Assignments and projects
+  - name: progress
+    description: User progress and XP
+  - name: leaderboard
+    description: Global leaderboard
+  - name: achievements
+    description: Achievement and badge system
+  - name: ai
+    description: Eternal AI assistant
+  - name: code
+    description: Code execution
+  - name: subscriptions
+    description: Subscription plans
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +45,443 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /users/profile:
+    get:
+      operationId: getUserProfile
+      tags: [users]
+      summary: Get current user profile
+      responses:
+        "200":
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "404":
+          description: Profile not found (needs onboarding)
+    post:
+      operationId: upsertUserProfile
+      tags: [users]
+      summary: Create or update user profile (onboarding)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserProfileInput"
+      responses:
+        "200":
+          description: Profile saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  /users/dashboard:
+    get:
+      operationId: getDashboard
+      tags: [users]
+      summary: Get dashboard summary (XP, level, streak, recent activity, continue learning)
+      responses:
+        "200":
+          description: Dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Dashboard"
+
+  /users/stats:
+    get:
+      operationId: getUserStats
+      tags: [users]
+      summary: Get detailed user stats
+      responses:
+        "200":
+          description: User stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserStats"
+
+  /courses:
+    get:
+      operationId: listCourses
+      tags: [courses]
+      summary: List all courses grouped by learning path
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Course"
+
+  /courses/featured:
+    get:
+      operationId: getFeaturedCourses
+      tags: [courses]
+      summary: Get featured and popular courses
+      responses:
+        "200":
+          description: Featured courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Course"
+
+  /courses/recommended:
+    get:
+      operationId: getRecommendedCourses
+      tags: [courses]
+      summary: Get recommended courses for current user
+      responses:
+        "200":
+          description: Recommended courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Course"
+
+  /courses/{courseId}:
+    get:
+      operationId: getCourse
+      tags: [courses]
+      summary: Get course detail with lessons
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Course with lessons
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseDetail"
+
+  /lessons/{lessonId}:
+    get:
+      operationId: getLesson
+      tags: [lessons]
+      summary: Get lesson detail with content
+      parameters:
+        - name: lessonId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Lesson content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LessonDetail"
+
+  /lessons/{lessonId}/complete:
+    post:
+      operationId: completeLesson
+      tags: [lessons]
+      summary: Mark lesson as complete and earn XP
+      parameters:
+        - name: lessonId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LessonCompleteInput"
+      responses:
+        "200":
+          description: Completion result with XP earned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/XpResult"
+
+  /challenges:
+    get:
+      operationId: listChallenges
+      tags: [challenges]
+      summary: List coding challenges
+      parameters:
+        - name: difficulty
+          in: query
+          schema:
+            type: string
+        - name: language
+          in: query
+          schema:
+            type: string
+        - name: courseId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of challenges
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Challenge"
+
+  /challenges/{challengeId}:
+    get:
+      operationId: getChallenge
+      tags: [challenges]
+      summary: Get challenge detail
+      parameters:
+        - name: challengeId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Challenge detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChallengeDetail"
+
+  /challenges/{challengeId}/submit:
+    post:
+      operationId: submitChallenge
+      tags: [challenges]
+      summary: Submit solution for a challenge
+      parameters:
+        - name: challengeId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CodeSubmission"
+      responses:
+        "200":
+          description: Submission result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmissionResult"
+
+  /assignments:
+    get:
+      operationId: listAssignments
+      tags: [assignments]
+      summary: List assignments
+      parameters:
+        - name: courseId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of assignments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Assignment"
+
+  /assignments/{assignmentId}:
+    get:
+      operationId: getAssignment
+      tags: [assignments]
+      summary: Get assignment detail
+      parameters:
+        - name: assignmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Assignment detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignmentDetail"
+
+  /assignments/{assignmentId}/submit:
+    post:
+      operationId: submitAssignment
+      tags: [assignments]
+      summary: Submit assignment for review
+      parameters:
+        - name: assignmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CodeSubmission"
+      responses:
+        "200":
+          description: Submission result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmissionResult"
+
+  /leaderboard:
+    get:
+      operationId: getLeaderboard
+      tags: [leaderboard]
+      summary: Get global leaderboard
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [all_time, weekly, monthly]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Leaderboard entries
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Leaderboard"
+
+  /achievements:
+    get:
+      operationId: listAchievements
+      tags: [achievements]
+      summary: List all available achievements
+      responses:
+        "200":
+          description: All achievements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Achievement"
+
+  /achievements/user:
+    get:
+      operationId: getUserAchievements
+      tags: [achievements]
+      summary: Get current user's earned achievements
+      responses:
+        "200":
+          description: User achievements
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserAchievement"
+
+  /ai/ask:
+    post:
+      operationId: askEternalAi
+      tags: [ai]
+      summary: Ask Eternal AI for hints and guidance (no direct answers)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AiQuestion"
+      responses:
+        "200":
+          description: AI response with hints
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AiResponse"
+
+  /code/run:
+    post:
+      operationId: runCode
+      tags: [code]
+      summary: Execute code in a sandboxed environment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CodeRun"
+      responses:
+        "200":
+          description: Code execution result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CodeRunResult"
+
+  /subscriptions/plans:
+    get:
+      operationId: listSubscriptionPlans
+      tags: [subscriptions]
+      summary: List available subscription plans
+      responses:
+        "200":
+          description: Subscription plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubscriptionPlan"
+
+  /progress/course/{courseId}:
+    get:
+      operationId: getCourseProgress
+      tags: [progress]
+      summary: Get user progress for a specific course
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Course progress
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseProgress"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +492,822 @@ components:
       required:
         - status
 
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+        clerkId:
+          type: string
+        username:
+          type: string
+        displayName:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+        bio:
+          type: ["string", "null"]
+        country:
+          type: ["string", "null"]
+        experienceLevel:
+          type: string
+          enum: [beginner, intermediate, advanced]
+        xp:
+          type: integer
+        level:
+          type: integer
+        streak:
+          type: integer
+        subscriptionPlan:
+          type: string
+          enum: [free, pro, team]
+        onboardingComplete:
+          type: boolean
+        createdAt:
+          type: string
+      required:
+        - id
+        - clerkId
+        - username
+        - displayName
+        - xp
+        - level
+        - streak
+        - subscriptionPlan
+        - onboardingComplete
+        - createdAt
+
+    UserProfileInput:
+      type: object
+      properties:
+        username:
+          type: string
+        displayName:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+        bio:
+          type: ["string", "null"]
+        country:
+          type: ["string", "null"]
+        experienceLevel:
+          type: string
+          enum: [beginner, intermediate, advanced]
+      required:
+        - username
+        - displayName
+
+    Dashboard:
+      type: object
+      properties:
+        profile:
+          $ref: "#/components/schemas/UserProfile"
+        stats:
+          $ref: "#/components/schemas/UserStats"
+        continueLearning:
+          $ref: "#/components/schemas/ContinueLearning"
+        recommendedCourses:
+          type: array
+          items:
+            $ref: "#/components/schemas/Course"
+        recentAchievements:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserAchievement"
+        streakInfo:
+          $ref: "#/components/schemas/StreakInfo"
+      required:
+        - profile
+        - stats
+        - recommendedCourses
+        - recentAchievements
+
+    UserStats:
+      type: object
+      properties:
+        xp:
+          type: integer
+        level:
+          type: integer
+        xpToNextLevel:
+          type: integer
+        streak:
+          type: integer
+        completedLessons:
+          type: integer
+        completedCourses:
+          type: integer
+        completedChallenges:
+          type: integer
+        completedAssignments:
+          type: integer
+        rank:
+          type: integer
+        totalUsers:
+          type: integer
+      required:
+        - xp
+        - level
+        - xpToNextLevel
+        - streak
+        - completedLessons
+        - completedCourses
+        - completedChallenges
+        - completedAssignments
+        - rank
+        - totalUsers
+
+    ContinueLearning:
+      type: object
+      properties:
+        course:
+          $ref: "#/components/schemas/Course"
+        lastLesson:
+          $ref: "#/components/schemas/Lesson"
+        progressPercent:
+          type: number
+
+    StreakInfo:
+      type: object
+      properties:
+        currentStreak:
+          type: integer
+        longestStreak:
+          type: integer
+        lastActiveDate:
+          type: ["string", "null"]
+        todayComplete:
+          type: boolean
+      required:
+        - currentStreak
+        - longestStreak
+        - todayComplete
+
+    Course:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        language:
+          type: ["string", "null"]
+        difficulty:
+          type: string
+          enum: [beginner, intermediate, advanced]
+        estimatedHours:
+          type: integer
+        lessonCount:
+          type: integer
+        xpReward:
+          type: integer
+        isPro:
+          type: boolean
+        iconEmoji:
+          type: string
+        color:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        enrolledCount:
+          type: integer
+      required:
+        - id
+        - title
+        - description
+        - category
+        - difficulty
+        - estimatedHours
+        - lessonCount
+        - xpReward
+        - isPro
+        - iconEmoji
+        - color
+        - tags
+        - enrolledCount
+
+    CourseDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        longDescription:
+          type: string
+        category:
+          type: string
+        language:
+          type: ["string", "null"]
+        difficulty:
+          type: string
+          enum: [beginner, intermediate, advanced]
+        estimatedHours:
+          type: integer
+        xpReward:
+          type: integer
+        isPro:
+          type: boolean
+        iconEmoji:
+          type: string
+        color:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        enrolledCount:
+          type: integer
+        chapters:
+          type: array
+          items:
+            $ref: "#/components/schemas/Chapter"
+        userProgress:
+          $ref: "#/components/schemas/CourseProgress"
+      required:
+        - id
+        - title
+        - description
+        - longDescription
+        - category
+        - difficulty
+        - estimatedHours
+        - xpReward
+        - isPro
+        - iconEmoji
+        - color
+        - tags
+        - enrolledCount
+        - chapters
+
+    Chapter:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        order:
+          type: integer
+        lessons:
+          type: array
+          items:
+            $ref: "#/components/schemas/Lesson"
+      required:
+        - id
+        - title
+        - order
+        - lessons
+
+    Lesson:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+          enum: [reading, coding, quiz, video]
+        order:
+          type: integer
+        xpReward:
+          type: integer
+        isCompleted:
+          type: boolean
+        durationMinutes:
+          type: integer
+      required:
+        - id
+        - title
+        - type
+        - order
+        - xpReward
+        - isCompleted
+        - durationMinutes
+
+    LessonDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+          enum: [reading, coding, quiz, video]
+        content:
+          type: string
+        xpReward:
+          type: integer
+        isCompleted:
+          type: boolean
+        starterCode:
+          type: ["string", "null"]
+        language:
+          type: ["string", "null"]
+        testCases:
+          type: ["array", "null"]
+          items:
+            $ref: "#/components/schemas/TestCase"
+        nextLessonId:
+          type: ["integer", "null"]
+        prevLessonId:
+          type: ["integer", "null"]
+        courseId:
+          type: integer
+        courseTitle:
+          type: string
+      required:
+        - id
+        - title
+        - type
+        - content
+        - xpReward
+        - isCompleted
+        - courseId
+        - courseTitle
+
+    TestCase:
+      type: object
+      properties:
+        id:
+          type: integer
+        input:
+          type: string
+        expectedOutput:
+          type: string
+        description:
+          type: string
+      required:
+        - id
+        - input
+        - expectedOutput
+        - description
+
+    LessonCompleteInput:
+      type: object
+      properties:
+        timeSpentSeconds:
+          type: integer
+      required:
+        - timeSpentSeconds
+
+    Challenge:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        difficulty:
+          type: string
+          enum: [easy, medium, hard]
+        language:
+          type: string
+        xpReward:
+          type: integer
+        isCompleted:
+          type: boolean
+        tags:
+          type: array
+          items:
+            type: string
+        completionRate:
+          type: number
+      required:
+        - id
+        - title
+        - description
+        - difficulty
+        - language
+        - xpReward
+        - isCompleted
+        - tags
+        - completionRate
+
+    ChallengeDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        difficulty:
+          type: string
+          enum: [easy, medium, hard]
+        language:
+          type: string
+        xpReward:
+          type: integer
+        isCompleted:
+          type: boolean
+        starterCode:
+          type: string
+        testCases:
+          type: array
+          items:
+            $ref: "#/components/schemas/TestCase"
+        hints:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - title
+        - description
+        - difficulty
+        - language
+        - xpReward
+        - isCompleted
+        - starterCode
+        - testCases
+        - hints
+        - tags
+
+    Assignment:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        difficulty:
+          type: string
+          enum: [easy, medium, hard]
+        xpReward:
+          type: integer
+        isCompleted:
+          type: boolean
+        isPro:
+          type: boolean
+        courseId:
+          type: ["integer", "null"]
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - title
+        - description
+        - difficulty
+        - xpReward
+        - isCompleted
+        - isPro
+        - tags
+
+    AssignmentDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        requirements:
+          type: string
+        difficulty:
+          type: string
+          enum: [easy, medium, hard]
+        xpReward:
+          type: integer
+        isCompleted:
+          type: boolean
+        isPro:
+          type: boolean
+        starterCode:
+          type: string
+        language:
+          type: string
+        testCases:
+          type: array
+          items:
+            $ref: "#/components/schemas/TestCase"
+        tags:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - title
+        - description
+        - requirements
+        - difficulty
+        - xpReward
+        - isCompleted
+        - isPro
+        - starterCode
+        - language
+        - testCases
+        - tags
+
+    CodeSubmission:
+      type: object
+      properties:
+        code:
+          type: string
+        language:
+          type: string
+      required:
+        - code
+        - language
+
+    SubmissionResult:
+      type: object
+      properties:
+        passed:
+          type: boolean
+        xpEarned:
+          type: integer
+        output:
+          type: string
+        error:
+          type: ["string", "null"]
+        testResults:
+          type: array
+          items:
+            $ref: "#/components/schemas/TestResult"
+        message:
+          type: string
+      required:
+        - passed
+        - xpEarned
+        - output
+        - testResults
+        - message
+
+    TestResult:
+      type: object
+      properties:
+        passed:
+          type: boolean
+        description:
+          type: string
+        actualOutput:
+          type: string
+        expectedOutput:
+          type: string
+      required:
+        - passed
+        - description
+        - actualOutput
+        - expectedOutput
+
+    XpResult:
+      type: object
+      properties:
+        xpEarned:
+          type: integer
+        totalXp:
+          type: integer
+        newLevel:
+          type: ["integer", "null"]
+        newAchievements:
+          type: array
+          items:
+            $ref: "#/components/schemas/Achievement"
+        streakUpdated:
+          type: boolean
+      required:
+        - xpEarned
+        - totalXp
+        - newAchievements
+        - streakUpdated
+
+    Leaderboard:
+      type: object
+      properties:
+        entries:
+          type: array
+          items:
+            $ref: "#/components/schemas/LeaderboardEntry"
+        userRank:
+          type: ["integer", "null"]
+        period:
+          type: string
+      required:
+        - entries
+        - period
+
+    LeaderboardEntry:
+      type: object
+      properties:
+        rank:
+          type: integer
+        userId:
+          type: integer
+        username:
+          type: string
+        displayName:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+        xp:
+          type: integer
+        level:
+          type: integer
+        streak:
+          type: integer
+        completedCourses:
+          type: integer
+        country:
+          type: ["string", "null"]
+      required:
+        - rank
+        - userId
+        - username
+        - displayName
+        - xp
+        - level
+        - streak
+        - completedCourses
+
+    Achievement:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        iconEmoji:
+          type: string
+        category:
+          type: string
+          enum: [beginner, intermediate, advanced, special]
+        xpReward:
+          type: integer
+        requirement:
+          type: string
+      required:
+        - id
+        - title
+        - description
+        - iconEmoji
+        - category
+        - xpReward
+        - requirement
+
+    UserAchievement:
+      type: object
+      properties:
+        achievement:
+          $ref: "#/components/schemas/Achievement"
+        earnedAt:
+          type: string
+      required:
+        - achievement
+        - earnedAt
+
+    AiQuestion:
+      type: object
+      properties:
+        question:
+          type: string
+        context:
+          type: string
+        contextType:
+          type: string
+          enum: [lesson, challenge, assignment, general]
+        code:
+          type: ["string", "null"]
+        language:
+          type: ["string", "null"]
+      required:
+        - question
+        - contextType
+
+    AiResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        hints:
+          type: array
+          items:
+            type: string
+        followUpQuestions:
+          type: array
+          items:
+            type: string
+        resources:
+          type: array
+          items:
+            $ref: "#/components/schemas/Resource"
+      required:
+        - message
+        - hints
+        - followUpQuestions
+        - resources
+
+    Resource:
+      type: object
+      properties:
+        title:
+          type: string
+        url:
+          type: string
+        type:
+          type: string
+      required:
+        - title
+        - url
+        - type
+
+    CodeRun:
+      type: object
+      properties:
+        code:
+          type: string
+        language:
+          type: string
+        stdin:
+          type: ["string", "null"]
+      required:
+        - code
+        - language
+
+    CodeRunResult:
+      type: object
+      properties:
+        output:
+          type: string
+        error:
+          type: ["string", "null"]
+        exitCode:
+          type: integer
+        executionTimeMs:
+          type: integer
+      required:
+        - output
+        - exitCode
+        - executionTimeMs
+
+    SubscriptionPlan:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        billingPeriod:
+          type: string
+        features:
+          type: array
+          items:
+            type: string
+        isPopular:
+          type: boolean
+      required:
+        - id
+        - name
+        - price
+        - billingPeriod
+        - features
+        - isPopular
+
+    CourseProgress:
+      type: object
+      properties:
+        courseId:
+          type: integer
+        completedLessons:
+          type: integer
+        totalLessons:
+          type: integer
+        percentComplete:
+          type: number
+        lastLessonId:
+          type: ["integer", "null"]
+        startedAt:
+          type: ["string", "null"]
+        completedAt:
+          type: ["string", "null"]
+      required:
+        - courseId
+        - completedLessons
+        - totalLessons
+        - percentComplete

@@ -1,0 +1,411 @@
+EternaPy – Interactive Programming Learning Platform
+
+Create a REAL, fully functional web application called EternaPy, inspired by Boot.dev, but with its own identity and learning experience.
+
+Core Vision
+
+EternaPy is a modern online platform where users can learn programming and software engineering skills through interactive lessons, coding challenges, projects, and AI-assisted guidance.
+
+The design must feel professional, educational, and realistic.
+
+Design Requirements
+
+* No heavy neon effects.
+* No cyberpunk style.
+* Use a modern, professional learning-platform design.
+* Inspired by platforms like:
+    * Boot.dev
+    * Coursera
+    * Codecademy
+    * Udemy
+    * Khan Academy
+* Clean typography.
+* Soft shadows.
+* Rounded corners.
+* Professional color palette.
+* Responsive for desktop, tablet, and mobile.
+* Smooth animations.
+* Dark mode and light mode support.
+
+⸻
+
+Authentication
+
+Users must be able to:
+
+Sign Up
+
+* Continue with Google
+* Continue with Apple
+* Continue with SSO
+
+Sign In
+
+* Continue with Google
+* Continue with Apple
+* Continue with SSO
+
+Authentication must be real and functional.
+
+After first login, redirect users to onboarding.
+
+⸻
+
+User Onboarding
+
+Ask users to create:
+
+* Username
+* Display Name
+* Profile Picture
+
+Optional:
+
+* Bio
+* Country
+* Experience Level
+
+Experience Level options:
+
+* Beginner
+* Intermediate
+* Advanced
+
+After completing onboarding, redirect to Dashboard.
+
+⸻
+
+Dashboard
+
+The dashboard displays:
+
+Learning Progress
+
+* XP Points
+* Current Level
+* Completed Lessons
+* Completed Assignments
+* Current Learning Streak
+* Achievement Badges
+
+Continue Learning
+
+Resume the last course automatically.
+
+Recommended Courses
+
+Based on user activity.
+
+Recent Achievements
+
+Display recently unlocked badges.
+
+⸻
+
+Learning Paths
+
+Users can learn:
+
+Programming Languages
+
+* Python
+* SQL
+* Go
+* JavaScript
+* TypeScript
+* Rust
+* Java
+* C#
+* C++
+* PHP
+
+Backend Development
+
+* REST APIs
+* Authentication
+* Databases
+* Server Architecture
+* Microservices
+* WebSockets
+
+Databases
+
+* PostgreSQL
+* MySQL
+* SQLite
+* MongoDB
+* Redis
+
+DevOps
+
+* Docker
+* Linux
+* CI/CD
+* GitHub Actions
+
+Web Development
+
+* HTML
+* CSS
+* React
+* Next.js
+
+Computer Science
+
+* Algorithms
+* Data Structures
+* Networking
+* Operating Systems
+
+⸻
+
+Lesson Structure
+
+Each lesson contains:
+
+Tutorial Section
+
+Step-by-step explanations.
+
+* Images
+* Diagrams
+* Examples
+* Interactive visualizations
+
+⸻
+
+Interactive Code Editor
+
+Built-in coding playground.
+
+Supports:
+
+* Python
+* SQL
+* Go
+* JavaScript
+
+Features:
+
+* Syntax Highlighting
+* Auto Save
+* Run Code
+* Test Cases
+* Console Output
+* Error Messages
+
+The editor must execute code securely.
+
+⸻
+
+Coding Challenges
+
+Users solve problems.
+
+Examples:
+
+* Loops
+* Functions
+* Classes
+* SQL Queries
+* API Building
+* Data Structures
+
+Automatic grading system required.
+
+⸻
+
+Assignments
+
+Larger projects.
+
+Examples:
+
+* Build a calculator
+* Create a REST API
+* Build a blog backend
+* Create a database schema
+
+Assignments have:
+
+* Requirements
+* Starter Code
+* Validation Tests
+* Submission System
+
+⸻
+
+Eternal AI
+
+Include an AI assistant called:
+
+Eternal AI
+
+Important Rule:
+
+Eternal AI MUST NOT solve assignments or coding challenges directly.
+
+Instead, it should:
+
+Allowed
+
+* Give hints
+* Explain concepts
+* Explain error messages
+* Suggest debugging approaches
+* Explain documentation
+* Recommend learning resources
+
+Not Allowed
+
+* Generate final assignment solutions
+* Complete coding challenges for users
+* Reveal answers
+* Auto-finish projects
+
+If users ask for answers, Eternal AI should:
+
+* Provide hints
+* Ask guiding questions
+* Explain relevant concepts
+
+The goal is learning, not cheating.
+
+⸻
+
+XP System
+
+Users earn XP by:
+
+* Completing lessons
+* Passing quizzes
+* Solving challenges
+* Finishing assignments
+* Maintaining streaks
+
+XP unlocks:
+
+* New lessons
+* New badges
+* New achievements
+
+⸻
+
+Achievement System
+
+Examples:
+
+Beginner
+
+* First Lesson
+* First Challenge
+
+Intermediate
+
+* 7-Day Streak
+* SQL Explorer
+* Python Apprentice
+
+Advanced
+
+* Backend Architect
+* API Master
+* Database Expert
+
+⸻
+
+Leaderboards
+
+Global leaderboard.
+
+Ranking based on:
+
+* XP
+* Streak
+* Completed Courses
+
+⸻
+
+Community Features
+
+Users can:
+
+* Join study groups
+* Ask questions
+* Share progress
+* Participate in coding events
+
+No answer sharing for assignments.
+
+⸻
+
+Subscription Plans
+
+Free
+
+* Basic courses
+* Limited Eternal AI usage
+* Community access
+
+Pro
+
+* All courses
+* Unlimited Eternal AI
+* Premium projects
+* Certificates
+* Advanced learning paths
+
+Team
+
+* Team dashboards
+* Organization analytics
+* Classroom features
+
+⸻
+
+Certificates
+
+Generate completion certificates after finishing courses.
+
+Certificates include:
+
+* Name
+* Course
+* Completion Date
+* Verification ID
+
+⸻
+
+Technical Requirements
+
+Frontend:
+
+* Next.js
+* React
+* TypeScript
+* TailwindCSS
+
+Backend:
+
+* Node.js
+* PostgreSQL
+
+Authentication:
+
+* Google OAuth
+* Apple Sign-In
+* Enterprise SSO
+
+Infrastructure:
+
+* Secure APIs
+* Cloud Deployment
+* Scalable Architecture
+
+⸻
+
+Final Goal
+
+Build a production-ready educational platform called EternaPy that feels like a professional alternative to Boot.dev.
+
+The platform must be fully functional, realistic, educational, secure, mobile-friendly, and focused on helping users truly learn programming rather than simply obtaining answers.
